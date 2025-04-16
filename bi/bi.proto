@@ -5,13 +5,13 @@ package bidirection;
 option go_package = ".;pb";
 
 service Bidirection {
-    rpc Bidirection(stream Data) returns (stream Response) {}
+  rpc Bidirection(stream Data) returns (stream Response) {}
 }
 
 message Data {
-    string data = 1;
+  string data = 1;
 }
 
 message Response {
-    string res = 1;
+  string res = 1;
 }
