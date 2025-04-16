@@ -1,0 +1,36 @@
+version: "3"
+
+silent: true
+
+tasks:
+  default:
+    aliases:
+      - list
+    desc: List all tasks
+    cmd: task -l
+
+  pre:
+    cmds:
+      - mkdir -p pb
+
+  proto:
+    deps:
+      - pre
+    desc: Generate proto files
+    cmds:
+      - protoc --go_out=pb --go_opt=paths=source_relative --go-grpc_out=pb --go-grpc_opt=paths=source_relative server.proto
+
+  server:
+    desc: Run the server
+    cmds:
+      - go run cmd/server/server.go
+
+  stream:
+    desc: Run the stream client
+    cmds:
+      - go run cmd/server_stream_client/client.go
+
+  bidirection:
+    desc: Run the bidirectional stream client
+    cmds:
+      - go run cmd/bidirectional_stream_client/client.go
