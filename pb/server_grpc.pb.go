@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v5.29.3
-// source: bi.proto
+// source: server.proto
 
 package pb
 
@@ -19,7 +19,124 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Bidirection_Bidirection_FullMethodName = "/bidirection.Bidirection/Bidirection"
+	ServerStream_ServerStream_FullMethodName = "/ServerStream.ServerStream/ServerStream"
+)
+
+// ServerStreamClient is the client API for ServerStream service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type ServerStreamClient interface {
+	ServerStream(ctx context.Context, in *Data, opts ...grpc.CallOption) (ServerStream_ServerStreamClient, error)
+}
+
+type serverStreamClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewServerStreamClient(cc grpc.ClientConnInterface) ServerStreamClient {
+	return &serverStreamClient{cc}
+}
+
+func (c *serverStreamClient) ServerStream(ctx context.Context, in *Data, opts ...grpc.CallOption) (ServerStream_ServerStreamClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ServerStream_ServiceDesc.Streams[0], ServerStream_ServerStream_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &serverStreamServerStreamClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type ServerStream_ServerStreamClient interface {
+	Recv() (*Response, error)
+	grpc.ClientStream
+}
+
+type serverStreamServerStreamClient struct {
+	grpc.ClientStream
+}
+
+func (x *serverStreamServerStreamClient) Recv() (*Response, error) {
+	m := new(Response)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// ServerStreamServer is the server API for ServerStream service.
+// All implementations must embed UnimplementedServerStreamServer
+// for forward compatibility
+type ServerStreamServer interface {
+	ServerStream(*Data, ServerStream_ServerStreamServer) error
+	mustEmbedUnimplementedServerStreamServer()
+}
+
+// UnimplementedServerStreamServer must be embedded to have forward compatible implementations.
+type UnimplementedServerStreamServer struct {
+}
+
+func (UnimplementedServerStreamServer) ServerStream(*Data, ServerStream_ServerStreamServer) error {
+	return status.Errorf(codes.Unimplemented, "method ServerStream not implemented")
+}
+func (UnimplementedServerStreamServer) mustEmbedUnimplementedServerStreamServer() {}
+
+// UnsafeServerStreamServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ServerStreamServer will
+// result in compilation errors.
+type UnsafeServerStreamServer interface {
+	mustEmbedUnimplementedServerStreamServer()
+}
+
+func RegisterServerStreamServer(s grpc.ServiceRegistrar, srv ServerStreamServer) {
+	s.RegisterService(&ServerStream_ServiceDesc, srv)
+}
+
+func _ServerStream_ServerStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(Data)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(ServerStreamServer).ServerStream(m, &serverStreamServerStreamServer{stream})
+}
+
+type ServerStream_ServerStreamServer interface {
+	Send(*Response) error
+	grpc.ServerStream
+}
+
+type serverStreamServerStreamServer struct {
+	grpc.ServerStream
+}
+
+func (x *serverStreamServerStreamServer) Send(m *Response) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+// ServerStream_ServiceDesc is the grpc.ServiceDesc for ServerStream service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var ServerStream_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "ServerStream.ServerStream",
+	HandlerType: (*ServerStreamServer)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "ServerStream",
+			Handler:       _ServerStream_ServerStream_Handler,
+			ServerStreams: true,
+		},
+	},
+	Metadata: "server.proto",
+}
+
+const (
+	Bidirection_Bidirection_FullMethodName = "/ServerStream.Bidirection/Bidirection"
 )
 
 // BidirectionClient is the client API for Bidirection service.
@@ -126,7 +243,7 @@ func (x *bidirectionBidirectionServer) Recv() (*Data, error) {
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Bidirection_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "bidirection.Bidirection",
+	ServiceName: "ServerStream.Bidirection",
 	HandlerType: (*BidirectionServer)(nil),
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
@@ -137,5 +254,5 @@ var Bidirection_ServiceDesc = grpc.ServiceDesc{
 			ClientStreams: true,
 		},
 	},
-	Metadata: "bi.proto",
+	Metadata: "server.proto",
 }

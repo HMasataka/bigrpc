@@ -7,16 +7,16 @@ import (
 	"net"
 	"os"
 
-	"github.com/HMasataka/bigrpc/se/pb"
+	"github.com/HMasataka/bigrpc/pb"
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 )
 
-type server struct {
-	pb.UnimplementedSestreamServer
+type stream struct {
+	pb.UnimplementedServerStreamServer
 }
 
-func (s *server) Sestream(data *pb.Data, stream pb.Sestream_SestreamServer) error {
+func (s *stream) ServerStream(data *pb.Data, stream pb.ServerStream_ServerStreamServer) error {
 	fmt.Println(data.Data)
 
 	for i := 1; i < 10; i++ {
@@ -26,6 +26,28 @@ func (s *server) Sestream(data *pb.Data, stream pb.Sestream_SestreamServer) erro
 			if errors.Is(err, io.EOF) {
 				break
 			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+type bidirection struct {
+	pb.UnimplementedBidirectionServer
+}
+
+func (b *bidirection) Bidirection(stream pb.Bidirection_BidirectionServer) error {
+	for {
+		in, err := stream.Recv()
+		if err != nil {
+			if errors.Is(err, io.EOF) {
+				break
+			}
+			return err
+		}
+
+		if err := stream.Send(&pb.Response{Res: in.Data}); err != nil {
 			return err
 		}
 	}
@@ -61,7 +83,8 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	pb.RegisterSestreamServer(grpcServer, &server{})
+	pb.RegisterServerStreamServer(grpcServer, &stream{})
+	pb.RegisterBidirectionServer(grpcServer, &bidirection{})
 
 	if err := grpcServer.Serve(listener); err != nil {
 		panic(err)

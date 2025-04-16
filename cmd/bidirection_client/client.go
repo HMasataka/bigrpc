@@ -7,7 +7,7 @@ import (
 	"os"
 	"sync"
 
-	"github.com/HMasataka/bigrpc/bi/pb"
+	"github.com/HMasataka/bigrpc/pb"
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"

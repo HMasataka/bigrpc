@@ -1,9 +1,0 @@
-# Bi-direction grpc streaming example
-
-## Generate proto files
-
-```bash
-protoc --go_out=pb --go_opt=paths=source_relative \
-    --go-grpc_out=pb --go-grpc_opt=paths=source_relative \
-    bi.proto
-```

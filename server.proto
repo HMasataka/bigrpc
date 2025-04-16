@@ -1,8 +1,12 @@
 syntax = "proto3";
 
-package bidirection;
+package ServerStream;
 
 option go_package = ".;pb";
+
+service ServerStream {
+  rpc ServerStream(Data) returns (stream Response) {}
+}
 
 service Bidirection {
   rpc Bidirection(stream Data) returns (stream Response) {}

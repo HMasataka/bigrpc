@@ -113,13 +113,15 @@ var File_server_proto protoreflect.FileDescriptor
 
 const file_server_proto_rawDesc = "" +
 	"\n" +
-	"\fserver.proto\x12\bSestream\"\x1a\n" +
+	"\fserver.proto\x12\fServerStream\"\x1a\n" +
 	"\x04Data\x12\x12\n" +
 	"\x04data\x18\x01 \x01(\tR\x04data\"\x1c\n" +
 	"\bResponse\x12\x10\n" +
-	"\x03res\x18\x01 \x01(\tR\x03res2>\n" +
-	"\bSestream\x122\n" +
-	"\bSestream\x12\x0e.Sestream.Data\x1a\x12.Sestream.Response\"\x000\x01B\x06Z\x04.;pbb\x06proto3"
+	"\x03res\x18\x01 \x01(\tR\x03res2N\n" +
+	"\fServerStream\x12>\n" +
+	"\fServerStream\x12\x12.ServerStream.Data\x1a\x16.ServerStream.Response\"\x000\x012N\n" +
+	"\vBidirection\x12?\n" +
+	"\vBidirection\x12\x12.ServerStream.Data\x1a\x16.ServerStream.Response\"\x00(\x010\x01B\x06Z\x04.;pbb\x06proto3"
 
 var (
 	file_server_proto_rawDescOnce sync.Once
@@ -135,14 +137,16 @@ func file_server_proto_rawDescGZIP() []byte {
 
 var file_server_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_server_proto_goTypes = []any{
-	(*Data)(nil),     // 0: Sestream.Data
-	(*Response)(nil), // 1: Sestream.Response
+	(*Data)(nil),     // 0: ServerStream.Data
+	(*Response)(nil), // 1: ServerStream.Response
 }
 var file_server_proto_depIdxs = []int32{
-	0, // 0: Sestream.Sestream.Sestream:input_type -> Sestream.Data
-	1, // 1: Sestream.Sestream.Sestream:output_type -> Sestream.Response
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	0, // 0: ServerStream.ServerStream.ServerStream:input_type -> ServerStream.Data
+	0, // 1: ServerStream.Bidirection.Bidirection:input_type -> ServerStream.Data
+	1, // 2: ServerStream.ServerStream.ServerStream:output_type -> ServerStream.Response
+	1, // 3: ServerStream.Bidirection.Bidirection:output_type -> ServerStream.Response
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -161,7 +165,7 @@ func file_server_proto_init() {
 			NumEnums:      0,
 			NumMessages:   2,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_server_proto_goTypes,
 		DependencyIndexes: file_server_proto_depIdxs,

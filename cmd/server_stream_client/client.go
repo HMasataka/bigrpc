@@ -6,7 +6,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/HMasataka/bigrpc/se/pb"
+	"github.com/HMasataka/bigrpc/pb"
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -41,11 +41,11 @@ func main() {
 
 	ctx := context.Background()
 
-	client := pb.NewSestreamClient(conn)
+	client := pb.NewServerStreamClient(conn)
 
 	data := pb.Data{Data: "connect"}
 
-	stream, err := client.Sestream(ctx, &data)
+	stream, err := client.ServerStream(ctx, &data)
 	if err != nil {
 		panic(err)
 	}
