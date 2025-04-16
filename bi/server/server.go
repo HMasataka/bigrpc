@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"io"
 	"net"
 
@@ -15,15 +16,16 @@ type server struct {
 func (s *server) Bidirection(stream pb.Bidirection_BidirectionServer) error {
 	for {
 		in, err := stream.Recv()
-
-		if err == io.EOF {
-			break
-		}
 		if err != nil {
+			if errors.Is(err, io.EOF) {
+				break
+			}
 			return err
 		}
 
-		stream.Send(&pb.Response{Res: in.Data})
+		if err := stream.Send(&pb.Response{Res: in.Data}); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -34,7 +36,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	grpcServer := grpc.NewServer()
+
 	pb.RegisterBidirectionServer(grpcServer, &server{})
-	grpcServer.Serve(lis)
+
+	if err := grpcServer.Serve(lis); err != nil {
+		panic(err)
+	}
 }

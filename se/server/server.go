@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"net"
@@ -15,14 +16,14 @@ type server struct {
 
 func (s *server) Sestream(data *pb.Data, stream pb.Sestream_SestreamServer) error {
 	fmt.Println(data.Data)
+
 	for i := 1; i < 10; i++ {
-		ijk := fmt.Sprintf("%d", i)
-		res := &pb.Response{Res: ijk}
-		err := stream.Send(res)
-		if err == io.EOF {
-			return nil
-		}
-		if err != nil {
+		res := &pb.Response{Res: fmt.Sprintf("%d", i)}
+
+		if err := stream.Send(res); err != nil {
+			if errors.Is(err, io.EOF) {
+				break
+			}
 			return err
 		}
 	}
@@ -35,7 +36,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	grpcServer := grpc.NewServer()
+
 	pb.RegisterSestreamServer(grpcServer, &server{})
-	grpcServer.Serve(lis)
+
+	if err := grpcServer.Serve(lis); err != nil {
+		panic(err)
+	}
 }
