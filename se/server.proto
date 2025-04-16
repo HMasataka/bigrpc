@@ -2,6 +2,9 @@ syntax = "proto3";
 
 package Sestream;
 
+option go_package = ".;pb";
+
+
 service Sestream {
   rpc Sestream(Data) returns (stream Response) {}
 }

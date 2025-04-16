@@ -4,11 +4,13 @@ import (
 	"io"
 	"net"
 
-	pb "github.com/HMasataka/bigrpc/bi/proto"
+	"github.com/HMasataka/bigrpc/bi/pb"
 	"google.golang.org/grpc"
 )
 
-type server struct{}
+type server struct {
+	pb.UnimplementedBidirectionServer
+}
 
 func (s *server) Bidirection(stream pb.Bidirection_BidirectionServer) error {
 	for {

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	pb "github.com/HMasataka/bigrpc/se/proto"
+	"github.com/HMasataka/bigrpc/se/pb"
 	"google.golang.org/grpc"
 )
 

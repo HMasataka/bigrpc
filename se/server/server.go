@@ -5,14 +5,15 @@ import (
 	"io"
 	"net"
 
-	pb "github.com/HMasataka/bigrpc/se/proto"
+	"github.com/HMasataka/bigrpc/se/pb"
 	"google.golang.org/grpc"
 )
 
-type server struct{}
+type server struct {
+	pb.UnimplementedSestreamServer
+}
 
 func (s *server) Sestream(data *pb.Data, stream pb.Sestream_SestreamServer) error {
-
 	fmt.Println(data.Data)
 	for i := 1; i < 10; i++ {
 		ijk := fmt.Sprintf("%d", i)
