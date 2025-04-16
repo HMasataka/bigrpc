@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"io"
 	"net"
+	"os"
 
 	"github.com/HMasataka/bigrpc/se/pb"
+	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 )
 
@@ -31,8 +33,28 @@ func (s *server) Sestream(data *pb.Data, stream pb.Sestream_SestreamServer) erro
 	return nil
 }
 
+func init() {
+	if err := godotenv.Load(); err != nil {
+		panic(err)
+	}
+}
+
+func getListener() (net.Listener, error) {
+	port := os.Getenv("PORT")
+	address := fmt.Sprintf("127.0.0.1:%v", port)
+
+	listener, err := net.Listen("tcp", address)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println("Listening on", address)
+
+	return listener, nil
+}
+
 func main() {
-	lis, err := net.Listen("tcp", "localhost:31080")
+	listener, err := getListener()
 	if err != nil {
 		panic(err)
 	}
@@ -41,7 +63,7 @@ func main() {
 
 	pb.RegisterSestreamServer(grpcServer, &server{})
 
-	if err := grpcServer.Serve(lis); err != nil {
+	if err := grpcServer.Serve(listener); err != nil {
 		panic(err)
 	}
 }

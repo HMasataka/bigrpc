@@ -4,17 +4,37 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"os"
 	"sync"
 
 	"github.com/HMasataka/bigrpc/bi/pb"
+	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-const port = "localhost:31080"
+func init() {
+	if err := godotenv.Load(); err != nil {
+		panic(err)
+	}
+}
+
+func getConnection() (*grpc.ClientConn, error) {
+	port := os.Getenv("PORT")
+	address := fmt.Sprintf("127.0.0.1:%v", port)
+
+	conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println("Connecting to", address)
+
+	return conn, nil
+}
 
 func main() {
-	conn, err := grpc.NewClient(port, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := getConnection()
 	if err != nil {
 		panic(err)
 	}
