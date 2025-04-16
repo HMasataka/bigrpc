@@ -6,7 +6,7 @@ import (
 	"io"
 	"sync"
 
-	pb "github.com/sylba2050/bigrpc/bi/proto"
+	pb "github.com/HMasataka/bigrpc/bi/proto"
 	"google.golang.org/grpc"
 )
 

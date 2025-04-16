@@ -5,7 +5,7 @@ import (
 	"io"
 	"net"
 
-	pb "github.com/sylba2050/bigrpc/se/proto"
+	pb "github.com/HMasataka/bigrpc/se/proto"
 	"google.golang.org/grpc"
 )
 

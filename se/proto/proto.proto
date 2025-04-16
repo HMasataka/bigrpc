@@ -3,13 +3,13 @@ syntax = "proto3";
 package Sestream;
 
 service Sestream {
-    rpc Sestream(Data) returns (stream Response) {}
+  rpc Sestream(Data) returns (stream Response) {}
 }
 
 message Data {
-    string data = 1;
+  string data = 1;
 }
 
 message Response {
-    string res = 1;
+  string res = 1;
 }
