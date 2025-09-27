@@ -33,4 +33,4 @@ tasks:
   bidirection:
     desc: Run the bidirectional stream client
     cmds:
-      - go run cmd/bidirectional_stream_client/client.go
+      - go run cmd/bidirection_client/client.go
